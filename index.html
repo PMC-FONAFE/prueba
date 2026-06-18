@@ -1,141 +1,7 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calendario PMC</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#f5f4f1;font-family:system-ui,-apple-system,sans-serif;color:#1a1917;padding:12px}
-.card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.06),0 0 0 1px #e8e5df;max-width:1024px;margin:0 auto}
-.header-container{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:3px solid #CD202C}
-h1{font-size:18px;font-weight:700;color:#1a1917}
-.controls{display:flex;wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:16px}
-.nav-mes{display:flex;align-items:center;gap:8px}
-.btn{background:#fff;border:1px solid #ccc9c2;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;color:#1a1917}
-.btn:hover{background:#f9f8f6}
-.btn-primary{background:#CD202C;color:#fff;border-color:#CD202C}
-.btn-primary:hover{background:#b01b24}
-.leg{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:24px;padding:11px 14px;background:#f9f8f6;border-radius:8px;border:1px solid #e4e1db}
-.leg-lbl{font-size:11px;color:#565A5C;margin-right:4px;font-weight:500}
-.pip{display:inline-flex;align-items:center;padding:4px 11px;border-radius:6px;font-size:11px;font-weight:600;border:1.5px solid;cursor:pointer;transition:all 0.2s ease}
-.pip.active{transform:scale(1.05);box-shadow:0 2px 4px rgba(0,0,0,0.1)}
-.pip.blur{opacity:0.15;transform:scale(0.95)}
-.p-an{background:#e8eef6;color:#0D4882;border-color:#0D4882}
-.p-vi{background:#eaf0ec;color:#3a5c3a;border-color:#67735E}
-.p-me{background:#f9f0ea;color:#8a5a2a;border-color:#BF895A}
-.p-my{background:#f5eaec;color:#73303C;border-color:#73303C}
-.p-ml{background:#e0f0f2;color:#004E5C;border-color:#004E5C}
-.p-fer{background:#f2f1ef;color:#565A5C;border-color:#ccc9c2;font-style:italic;font-weight:400;cursor:default}
-.wb{margin-bottom:14px}
-.wlbl{font-size:9px;color:#aaa;letter-spacing:.07em;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:8px;font-weight:500}
-.wnote{font-size:9px;color:#7a3030;background:#fceaea;border:1px solid #f0c0c0;padding:2px 8px;border-radius:5px;text-transform:none;letter-spacing:0;font-weight:500}
-.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
-.dc{border-radius:10px;padding:12px 11px;min-height:96px;border:1.5px solid #e4e1db;background:#fff;transition:opacity 0.2s ease}
-.dc.feriado{background:#f5f4f1;border:1.5px dashed #ccc9c2}
-.dc-day{font-size:9px;font-weight:600;color:#bbb;letter-spacing:.07em;text-transform:uppercase;margin-bottom:2px}
-.dc-num{font-size:18px;font-weight:500;color:#1a1917;line-height:1;margin-bottom:9px}
-.tel-list{display:flex;flex-direction:column;gap:4px}
-.b{display:inline-block;padding:3px 9px;border-radius:5px;font-size:10px;font-weight:600;border:1.5px solid;transition:opacity 0.2s ease}
-.b.blur{opacity:0.15}
-.b-an{background:#e8eef6;color:#0D4882;border-color:#0D4882}
-.b-vi{background:#eaf0ec;color:#3a5c3a;border-color:#67735E}
-.b-me{background:#f9f0ea;color:#8a5a2a;border-color:#BF895A}
-.b-my{background:#f5eaec;color:#73303C;border-color:#73303C}
-.b-ml{background:#e0f0f2;color:#004E5C;border-color:#004E5C}
-.fer-lbl{font-size:9px;color:#CD202C;font-weight:500;line-height:1.5;margin-top:2px}
-.sum-wrap{margin-top:28px;padding:20px;background:#f9f8f6;border-radius:12px;border:1px solid #e4e1db}
-.sum-title{font-size:10px;font-weight:700;color:#565A5C;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
-.cards-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
-.sc{padding:14px 12px 12px;background:#fff;border-radius:10px;border:1px solid #e4e1db;display:flex;flex-direction:column;align-items:center;gap:2px}
-.sc-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;margin-bottom:4px;flex-shrink:0}
-.av-an{background:#0D4882}
-.av-vi{background:#2D6B2D}
-.av-me{background:#A0620A}
-.av-my{background:#73303C}
-.av-ml{background:#004E5C}
-.sc-n{font-size:11px;color:#565A5C;font-weight:600}
-.sc-v{font-size:26px;font-weight:700;color:#1a1917;line-height:1;margin-top:2px}
-.sc-s{font-size:9px;color:#aaa}
-.table-responsive{width:100%;overflow-x:auto}
-.day-table{width:100%;border-collapse:collapse;font-size:11px;min-width:500px}
-.day-table th{padding:7px 12px;font-size:9px;font-weight:700;color:#888;letter-spacing:.07em;text-transform:uppercase;border-bottom:2px solid #e4e1db;text-align:center}
-.day-table th:first-child{text-align:left}
-.day-table td{padding:7px 12px;border-bottom:1px solid #f0ede8;text-align:center}
-.day-table td:first-child{text-align:left}
-.person-cell{display:flex;align-items:center;gap:8px}
-.avatar-sm{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
-.num-cell{font-size:13px;font-weight:600;color:#1a1917}
-
-@media(max-width: 768px) {
-  body{padding:8px}
-  .card{padding:12px;border-radius:0}
-  .grid{grid-template-columns:1fr;gap:6px}
-  .dc{min-height:auto;padding:10px;display:flex;align-items:center;gap:12px}
-  .dc-day{margin-bottom:0;width:35px}
-  .dc-num{margin-bottom:0;font-size:16px;width:25px;text-align:right}
-  .tel-list{flex-direction:row;flex-wrap:wrap;gap:4px}
-  .cards-row{grid-template-columns:repeat(3,1fr)}
-  .controls{flex-direction:column;align-items:stretch;gap:10px}
-  .nav-mes{justify-content:space-between}
-}
-</style>
-</head>
-<body>
-<div class="card">
-  <div class="header-container">
-    <h1>Calendario de Teletrabajo y Vacaciones — Área PMC</h1>
-  </div>
-
-  <div class="controls">
-    <div class="nav-mes">
-      <button class="btn" onclick="cambiarMes(-1)">◀ Ant</button>
-      <span id="mes-actual" style="font-weight:700; font-size:14px; min-width:120px; text-align:center;">Cargando...</span>
-      <button class="btn" onclick="cambiarMes(1)">Sig ▶</button>
-    </div>
-    <div>
-      <button class="btn btn-primary" onclick="ejecutarChocolateador()">🎲 Chocolatear Mes Activo</button>
-    </div>
-  </div>
-
-  <div class="leg" id="badges-filtro">
-    <span class="leg-lbl">📡 Filtrar Vista:</span>
-    <span class="pip p-an" data-user="An">Andrés</span>
-    <span class="pip p-vi" data-user="Vi">Victor</span>
-    <span class="pip p-me" data-user="Me">Mela</span>
-    <span class="pip p-my" data-user="My">Mey</span>
-    <span class="pip p-ml" data-user="Ml">Meli</span>
-    <span style="width:1px;height:14px;background:#dedad3;display:inline-block;margin:0 3px"></span>
-    <span class="pip p-fer">🌴 Vacaciones</span>
-  </div>
-
-  <div id="cal"></div>
-
-  <div class="sum-wrap">
-    <div class="sum-title">Resumen de teletrabajo (Mes Actual)</div>
-    <div class="cards-row" id="cards"></div>
-    <div class="table-responsive">
-      <table class="day-table">
-        <thead>
-          <tr>
-            <th>Persona</th>
-            <th>Lunes</th>
-            <th>Martes</th>
-            <th>Miércoles</th>
-            <th>Jueves</th>
-            <th>Viernes</th>
-          </tr>
-        </thead>
-        <tbody id="daybody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
 <script>
 const P=1, T=0, F=-1;
 const DN=['Lun','Mar','Mié','Jue','Vie'];
-let mesVisualizandose = new Date(2026, 5, 1); // Empezamos en Junio 2026
+let mesVisualizandose = new Date(2026, 5, 1); // Junio 2026
 
 let FLAB = {};
 let VACACIONES = {};
@@ -154,13 +20,13 @@ function fkey(d){return`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`}
 
 async function cargarDatosBase() {
   try {
-    const resF = await fetch('data/feriados.json'); FLAB = await resF.json();
-    const resV = await fetch('data/vacaciones.json'); VACACIONES = await resV.json();
-    const resP = await fetch('data/programacion.json'); DB_PROGRAMACION = await resP.json();
+    const resF = await fetch('./data/feriados.json'); FLAB = await resF.json();
+    const resV = await fetch('./data/vacaciones.json'); VACACIONES = await resV.json();
+    const resP = await fetch('./data/programacion.json'); DB_PROGRAMACION = await resP.json();
     renderizarCalendario();
   } catch (error) {
     console.error("Error cargando archivos JSON desde /data:", error);
-    alert("Error crítico al inicializar las bases de datos locales.");
+    alert("Error crítico al inicializar las bases de datos locales en GitHub Pages.");
   }
 }
 
@@ -173,9 +39,9 @@ function renderizarCalendario() {
   const mes = mesVisualizandose.getMonth(), año = mesVisualizandose.getFullYear();
 
   let curr = new Date(año, mes, 1);
-  curr.setDate(curr.getDate() - (curr.getDay() === 0 ? 6 : curr.getDay() - 1)); // Lunes de la primera semana
+  curr.setDate(curr.getDate() - (curr.getDay() === 0 ? 6 : curr.getDay() - 1)); 
   let hasta = new Date(año, mes + 1, 0);
-  hasta.setDate(hasta.getDate() + (hasta.getDay() === 0 ? 0 : 7 - hasta.getDay())); // Domingo de la última semana
+  hasta.setDate(hasta.getDate() + (hasta.getDay() === 0 ? 0 : 7 - hasta.getDay())); 
 
   while(curr < hasta) {
     let tieneDiasDelMes = false;
@@ -189,7 +55,6 @@ function renderizarCalendario() {
     const wl = document.createElement('div'); wl.className = 'wlbl';
     let fIni = new Date(curr), fFin = new Date(curr); fFin.setDate(fFin.getDate() + 4);
     
-    // Contar días hábiles reales de la semana para la nota visual
     let habiles = 0;
     for(let i=0; i<5; i++){
       let chk = new Date(curr); chk.setDate(chk.getDate()+i);
@@ -203,8 +68,10 @@ function renderizarCalendario() {
     const grid = document.createElement('div'); grid.className = 'grid';
     for(let i=0; i<5; i++) {
       let d = new Date(curr); d.setDate(d.getDate() + i); let key = fkey(d);
-      let dataDia = DB_PROGRAMACION.find(x => x.fecha === key) || { An:P, Vi:P, Me:P, My:P, Ml:P };
-      let isFer = dataDia.An === F || FLAB[key];
+      
+      // CAMBIO CLAVE: Si no hay registro en el JSON, la celda se asume vacía de teletrabajo. NO autogenera nada.
+      let dataDia = DB_PROGRAMACION.find(x => x.fecha === key) || null;
+      let isFer = FLAB[key] || (dataDia && dataDia.An === F);
       let vacHoy = VACACIONES[key] || [];
 
       const col = document.createElement('div'); col.className = 'dc' + (isFer ? ' feriado' : '');
@@ -215,20 +82,26 @@ function renderizarCalendario() {
       } else {
         const bl = document.createElement('div'); bl.className = 'tel-list';
         let hasTel = false;
-        WK.forEach(([k, name, bcls]) => {
-          let esT = dataDia[k] === T, isVac = vacHoy.includes(k);
-          if(esT) {
-            const b = document.createElement('span'); b.className = `b ${bcls}`;
-            if(filtroUsuarioActivo && filtroUsuarioActivo !== k) b.classList.add('blur');
-            b.textContent = name + (isVac ? ' 🌴' : ''); bl.appendChild(b);
-            if(d.getMonth() === mes) { telC[k]++; telDay[k][i]++; }
-            hasTel = true;
-          } else if(isVac && (k === 'Ml' || k === 'Me')) {
-            const b = document.createElement('span'); b.className = `b b-${k.toLowerCase()}`; b.style.opacity = '0.4';
-            if(filtroUsuarioActivo && filtroUsuarioActivo !== k) b.classList.add('blur');
-            b.textContent = `${name} 🌴`; bl.appendChild(b); hasTel = true;
-          }
-        });
+
+        // Solo procesamos teletrabajo si el día ya existe explícitamente en la BD
+        if (dataDia) {
+          WK.forEach(([k, name, bcls]) => {
+            let esT = dataDia[k] === T, isVac = vacHoy.includes(k);
+            if(esT) {
+              const b = document.createElement('span'); b.className = `b ${bcls}`;
+              if(filtroUsuarioActivo && filtroUsuarioActivo !== k) b.classList.add('blur');
+              b.textContent = name + (isVac ? ' 🌴' : ''); bl.appendChild(b);
+              if(d.getMonth() === mes) { telC[k]++; telDay[k][i]++; }
+              hasTel = true;
+            } else if(isVac && (k === 'Ml' || k === 'Me')) {
+              const b = document.createElement('span'); b.className = `b b-${k.toLowerCase()}`; b.style.opacity = '0.4';
+              if(filtroUsuarioActivo && filtroUsuarioActivo !== k) b.classList.add('blur');
+              b.textContent = `${name} 🌴`; bl.appendChild(b); hasTel = true;
+            }
+          });
+        }
+        
+        // Si no hay teletrabajo asignado en el JSON o el día no está programado aún, sale guión corto indicando presencial
         if(!hasTel) bl.innerHTML = `<div style="font-size:9px;color:#d0cdc7;font-style:italic;margin-top:2px">—</div>`;
         col.appendChild(bl);
       }
@@ -243,11 +116,11 @@ function dataDiaIn_k(f) { let x = DB_PROGRAMACION.find(d=>d.fecha===f); return x
 
 function actualizarMétricas(telC, telDay) {
   const cardsEl = document.getElementById('cards'); cardsEl.innerHTML = '';
-  WK.forEach(([k,name,,,avcls])=>{
+  WK.forEach(([k,name])=>{
     cardsEl.innerHTML += `<div class="sc"><div class="sc-avatar av-${k.toLowerCase()}">${name[0]}</div><div class="sc-n">${name}</div><div class="sc-v">${telC[k]}</div><div class="sc-s">días mes</div></div>`;
   });
   const tbody = document.getElementById('daybody'); tbody.innerHTML = '';
-  WK.forEach(([k,name,,,avcls])=>{
+  WK.forEach(([k,name])=>{
     let r = `<tr><td><div class="person-cell"><div class="avatar-sm av-${k.toLowerCase()}">${name[0]}</div><span style="font-weight:600">${name}</span></div></td>`;
     [0,1,2,3,4].forEach(i=> r += `<td><span class="num-cell">${telDay[k][i]}</span></td>`);
     tbody.innerHTML += r + `</tr>`;
@@ -264,16 +137,20 @@ document.getElementById('badges-filtro').addEventListener('click', (e) => {
   renderizarCalendario();
 });
 
-// 🎲 MOTOR DE CHOCOLATEO BAJO RESTRICCIONES DURAS (CSP)
+// EL MOTOR SOLO SE ACTIVA DESDE AQUÍ
 function ejecutarChocolateador() {
   const m = mesVisualizandose.getMonth(), a = mesVisualizandose.getFullYear();
-  let fIni = new Date(a, m, 1); fIni.setDate(fIni.getDate() - (fIni.getDay() === 0 ? 6 : fIni.getDay() - 1));
-  let fFin = new Date(a, m + 1, 0); fFin.setDate(fFin.getDate() + (fFin.getDay() === 0 ? 0 : 7 - fFin.getDay()));
+  
+  // Definir rango exacto del mes seleccionado
+  let primerDiaMes = new Date(a, m, 1);
+  let ultimoDiaMes = new Date(a, m + 1, 0);
+
+  // Forzar que el motor trabaje semana completa desde el lunes previo hasta el domingo posterior
+  let fIni = new Date(primerDiaMes); fIni.setDate(fIni.getDate() - (fIni.getDay() === 0 ? 6 : fIni.getDay() - 1));
+  let fFin = new Date(ultimoDiaMes); fFin.setDate(fFin.getDate() + (fFin.getDay() === 0 ? 0 : 7 - fFin.getDay()));
 
   let nuevasAsignaciones = [];
   let curr = new Date(fIni);
-  
-  // Clonar BD actual para evaluar consistencia cruzada de semanas intermedias
   let bdTemporal = [...DB_PROGRAMACION];
 
   while(curr < fFin) {
@@ -283,10 +160,8 @@ function ejecutarChocolateador() {
       diasSemana.push(d);
     }
 
-    // Filtrar días hábiles reales de la semana
     let habiles = diasSemana.filter(d => !FLAB[fkey(d)]);
     let conteoHabiles = habiles.length;
-
     let totalDiasAsignar = conteoHabiles === 5 ? 2 : conteoHabiles >= 4 ? 1 : 0;
     let usuarios = ['An', 'Vi', 'Me', 'My'];
 
@@ -301,7 +176,6 @@ function ejecutarChocolateador() {
         return { fecha: k, An:P, Vi:P, Me:P, My:P, Ml:P };
       });
 
-      // Asignar aleatoriamente cumpliendo cuotas
       let valido = true;
       usuarios.forEach(u => {
         let asignados = 0;
@@ -317,14 +191,11 @@ function ejecutarChocolateador() {
 
       if(!valido) continue;
 
-      // VALIDACIÓN DE RESTRICCIONES DURAS
       let checkDuras = true;
       for(let i=0; i<propuesta.length; i++) {
         let dia = propuesta[i];
-        // 1. Andrés y Víctor no coinciden el mismo día
         if(dia.An === T && dia.Vi === T) { checkDuras = false; break; }
 
-        // 2. No consecutivos (Revisa el día anterior dentro de la propuesta o en la BD temporal)
         let fActual = diasSemana[i];
         let fAyer = new Date(fActual); fAyer.setDate(fAyer.getDate() - 1);
         let dataAyer = propuesta.find(p => p.fecha === fkey(fAyer)) || bdTemporal.find(b => b.fecha === fkey(fAyer));
@@ -345,13 +216,13 @@ function ejecutarChocolateador() {
     }
 
     if(!exitoSemana) {
-      alert("El algoritmo colisionó debido a feriados estrictos. Inténtalo de nuevo.");
+      alert("El algoritmo colisionó debido a restricciones. Inténtalo de nuevo.");
       return;
     }
     curr.setDate(curr.getDate() + 7);
   }
 
-  // Combinar limpio: Filtrar duplicados manteniendo los nuevos sobre los históricos viejos
+  // Mezclar los nuevos registros del mes sobreescribiendo si ya existían parcialmente
   nuevasAsignaciones.forEach(n => {
     let index = DB_PROGRAMACION.findIndex(x => x.fecha === n.fecha);
     if(index !== -1) DB_PROGRAMACION[index] = n;
@@ -361,7 +232,6 @@ function ejecutarChocolateador() {
   DB_PROGRAMACION.sort((a,b) => new Date(a.fecha) - new Date(b.fecha));
   renderizarCalendario();
 
-  // Descarga limpia e inmediata del JSON consolidado
   const blob = new Blob([JSON.stringify(DB_PROGRAMACION, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const aDom = document.createElement('a'); aDom.href = url;
@@ -371,5 +241,3 @@ function ejecutarChocolateador() {
 
 window.onload = cargarDatosBase;
 </script>
-</body>
-</html>
